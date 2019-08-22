@@ -37,6 +37,10 @@ function displayBreedImage(imageString) {
   $('.js-single-random').html(`<img src="${imageString}">`);
 }
 
+function displayError(errorMsg) {
+  $('.js-single-random').html(`<span style="font-weight:bold;color:red">${errorMsg}</span>`);
+}
+
 function getBreedImage(breed) {
   fetch(`https://dog.ceo/api/breed/${breed}/images/random`)
     .then(response => response.json())
@@ -47,7 +51,7 @@ function getBreedImage(breed) {
       const breedImage = extractBreed(responseData);
       displayBreedImage(breedImage);
     })
-    .catch(error => console.log(error));
+    .catch(error => displayError(error));
 }
 
 // another method
@@ -71,15 +75,18 @@ function handleSubmitDogImagesClicked() {
     let amount = $('.js-input-amount').val();
     if (amount) {
       amount = Math.min(amount, 50);
-      getDogImages(amount);
     }
+    else {
+      amount = 1;
+    }
+    getDogImages(amount);
   });
 }
 
 function handleSubmitBreedImageClicked() {
   $('#breedImage-form').on('click', '.js-submit-breed', event => {
     event.preventDefault();
-    let breed = $('.js-input-breed').val();
+    let breed = $('.js-input-breed').val().toLowerCase();
     getBreedImage(breed);
   });
 }
