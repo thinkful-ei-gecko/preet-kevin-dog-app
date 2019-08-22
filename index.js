@@ -4,13 +4,14 @@ function getDogImages(amount) {
   fetch(`https://dog.ceo/api/breeds/image/random/${amount}`)
     .then(response => response.json())
     .then(responseData => {
-      const extractedImages = extractData(responseData, amount);
-      displayOnDom(extractedImages);
+      const extractedImages = extractAllDogImages(responseData, amount);
+      displayDogImages(extractedImages);
     })
     .catch(error => console.log(error));
 }
 
-function extractData(jsonData, amount) {
+function extractAllDogImages(jsonData, amount) {
+  console.log(jsonData);
   const allImages = [];
   for(let i = 0; i < amount; i++) {
     let imageURL = jsonData.message[i];
@@ -20,23 +21,71 @@ function extractData(jsonData, amount) {
   return allImages; 
 }
 
-function displayOnDom(imageArr) {
+function extractBreed(jsonData) {
+  return jsonData.message;
+} 
+
+function displayDogImages(imageArr) {
   let imgString = ``;
   for(let i = 0; i < imageArr.length; i++){
-    imgString += `<img src="${imageArr[i]}">`
+    imgString += `<img src="${imageArr[i]}">`;
   }
   $('.js-display-images').html(imgString);
 }
 
-function handleSubmitClicked() {
-  $('form').on('submit', event => {
+function displayBreedImage(imageString) {
+  $('.js-single-random').html(`<img src="${imageString}">`);
+}
+
+function getBreedImage(breed) {
+  fetch(`https://dog.ceo/api/breed/${breed}/images/random`)
+    .then(response => response.json())
+    .then(responseData => {
+      if (responseData.status === 'error'){
+        throw Error (responseData.message);
+      }
+      const breedImage = extractBreed(responseData);
+      displayBreedImage(breedImage);
+    })
+    .catch(error => console.log(error));
+}
+
+// another method
+function tryGetBreedImage(breed) {
+  fetch(`https://dog.ceo/api/breeds/list/all`)
+    .then(response => response.json())
+    .then(responseData => {
+      if (breed in responseData.message) {
+        getBreedImage(breed);
+      }
+      else {
+        throw Error (`${breed} breed doesn't exist!`);
+      }
+    })
+    .catch(error => console.log(error));
+}
+
+function handleSubmitDogImagesClicked() {
+  $('#dogImages-form').on('click', '.js-submit-amount', event => {
     event.preventDefault();
     let amount = $('.js-input-amount').val();
     if (amount) {
-      let dogImages = getDogImages(amount);
+      amount = Math.min(amount, 50);
+      getDogImages(amount);
     }
   });
 }
 
+function handleSubmitBreedImageClicked() {
+  $('#breedImage-form').on('click', '.js-submit-breed', event => {
+    event.preventDefault();
+    let breed = $('.js-input-breed').val();
+    getBreedImage(breed);
+  });
+}
+
 // bind event listeners
-$(handleSubmitClicked());
+$(() => {
+  handleSubmitDogImagesClicked();
+  handleSubmitBreedImageClicked();
+});

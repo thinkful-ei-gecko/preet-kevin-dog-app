@@ -8,12 +8,26 @@
 </head>
 <body>
   <h1>Dog App</h1>
-  <form>
-    <input type="text" class="js-input-amount" placeholder="1 to 50">
-    <input type="submit" value="Get dog pics!">
-  </form>
+  <section>
+    <form id="dogImages-form">
+      <fieldset>
+        <legend>Generate Dog Images</legend>
+        <input type="text" class="js-input-amount" placeholder="1 to 50">
+        <input type="submit" class="js-submit-amount" value="Get dog pics!">
+    </fieldset>
+    </form>
+    <div class="js-display-images"></div>
+  </section>
 
-  <section class="js-display-images">
+  <section>
+    <form id="breedImage-form">
+      <fieldset>
+        <legend>Generate Specific Breed Image</legend>
+        <input type="text" class="js-input-breed" placeholder="breed name">
+        <input type="submit" class="js-submit-breed" value="Get breed pic!">
+      </fieldset>
+    </form>
+    <div class="js-single-random"></div>
   </section>
 
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
