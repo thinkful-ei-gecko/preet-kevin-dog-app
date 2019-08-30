@@ -83,6 +83,19 @@ function handleSubmitDogImagesClicked() {
   });
 }
 
+function handleSubmitDogImagesClicked() {
+  $('#dogImages-form').on('click', '.js-submit-amount', event => {
+    event.preventDefault();
+    let amount = $('.js-input-amount').val();
+    if (amount > 50 || amount < 1) {
+      alert('Enter a number between 1 and  50');
+    }
+    else {
+      getDogImages(amount);
+    }
+  });
+}
+
 function handleSubmitBreedImageClicked() {
   $('#breedImage-form').on('click', '.js-submit-breed', event => {
     event.preventDefault();
